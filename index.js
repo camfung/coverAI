@@ -6,6 +6,7 @@ const axios = require("axios");
 const qs = require("querystring");
 
 const { JSDOM } = require("jsdom");
+const { send } = require("process");
 
 let access_token = null;
 const authorize = "https://accounts.spotify.com/authorize";
@@ -121,6 +122,36 @@ app.get("/getPlaylists", (req, res) => {
     .catch(error => {
         res.send(error)
     })
+})
+
+app.get("/playlist-view", (req, res) => {
+  sendHtml("playlist", res);
+})
+
+app.get("/playlist-tracks", (req, res) => {
+  // sendHtml("playlist", res)
+  let href = req.query.href
+  axios({
+    method: 'get',
+    url: href + "?fields=items(track(name))",
+    headers: {
+      "Accept" : "application/json",
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    }
+  })
+  .then(response => {
+    console.log(response)
+    data = [];
+    for (let i =0 ; i < 5; i++){
+      data.push(response.data.items[i].track.name)
+    }
+    res.send(data);
+  })
+  .catch(error => {
+    res.send(error)
+  })
+
 })
 
 let sendHtml = (url, res) => {

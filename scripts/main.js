@@ -11,20 +11,23 @@ if (localStorage.login === "true") {
         console.table(doc)
         // console.log(doc[0].images[0].imageUrl)
 
-        for (let i = 0 ; i < doc.length; i++){
+        for (let i = 0 ; i < 3; i++){
             let imageUrl = doc[i].imageUrl;
             let name = doc[i].name;
             let trackUrl = doc[i].trackUrl;
             localStorage.setItem(name, trackUrl);
+
             let newEle = template.content.cloneNode(true);
             newEle.querySelector(".playlist-name").textContent = name;
             newEle.querySelector(".playlist-image").src = imageUrl;
+            let data = {
+                name : name,
+                image: imageUrl,
+                songs : []
+            }
+            // writePlaylists(name, data);
+            newEle.querySelector(".playlist").onclick = () => getSongs(trackUrl); 
             document.querySelector("#playlists-holder").appendChild(newEle);
-        }
-
-        let playlists = document.querySelectorAll(".playlist")
-        for (ele of playlists){
-            ele.addEventListener("click", call)
         }
     }
 
@@ -32,6 +35,22 @@ if (localStorage.login === "true") {
     xhr.send();
 }
 
-const call = () =>{
-    console.log("called")
+const getSongs = (url) =>{
+    localStorage.setItem("song", url)
+    window.location.replace("http://localhost:8000/playlist-view")
+}
+
+/**
+ * writing the playlist info to the db
+ */
+const writePlaylists = (name, data) => {
+    firebase.auth().onAuthStateChanged(user => {
+        // Check if user is signed in:
+        if (user) {
+            currentUser = db.collection("users").doc(user.uid)
+            currentUser.collection("playlists").doc(name).set(data)
+        } else {
+
+        }
+    });
 }

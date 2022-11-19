@@ -11,6 +11,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+
     <!------------------------------------------>
     <!-- Bootstrap Library CSS JS CDN go here -->
     <!------------------------------------------>
@@ -47,7 +48,7 @@
     <a href="">playlists</a>
     
   </nav> -->
-  <div id="playlists-wrapper">
+  <div id="main-wrapper">
     <header>
       <h1>Your Playlists</h1>
       <a onclick="callServer()" id="link">Link your spotify</a>
@@ -56,10 +57,10 @@
     <main id="playlists-holder">
       <template id="playlist-template">
 
-        <form action="" class="playlist">
-          <img src="./images/island.png" alt="" class="playlist-image">
+        <div class="playlist">
+          <img src="" alt="No image available for this playlist" class="playlist-image">
           <h2 class="playlist-name">Name</h2>
-        </form>
+        </div>
 
       </template>
 
@@ -70,7 +71,7 @@
     <!---------------------------------------------->
     <!-- Your own JavaScript functions go here    -->
     <!---------------------------------------------->
-    <script src="./scripts/firebaseAPI_TEAM99.js"></script>
+    <script src="./scripts/firebaseAPI_TEAM09.js"></script>
     <script src="./scripts/redirect.js"></script>
     <script src="./scripts/main.js"></script>
 
