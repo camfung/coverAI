@@ -135,7 +135,7 @@ header a {
     color: black;
 }
 
-a.button1{
+.button1{
     display:inline-block;
     padding:0.35em 1.2em;
     border: rgb(137, 137, 137) solid .1em;

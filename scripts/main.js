@@ -11,7 +11,7 @@ if (localStorage.login === "true") {
         console.table(doc)
         // console.log(doc[0].images[0].imageUrl)
 
-        for (let i = 0 ; i < 3; i++){
+        for (let i = 0 ; i < doc.length; i++){
             let imageUrl = doc[i].imageUrl;
             let name = doc[i].name;
             let trackUrl = doc[i].trackUrl;
@@ -26,7 +26,7 @@ if (localStorage.login === "true") {
                 songs : []
             }
             // writePlaylists(name, data);
-            newEle.querySelector(".playlist").onclick = () => getSongs(trackUrl); 
+            newEle.querySelector(".playlist").onclick = () => getSongs(trackUrl, imageUrl, name); 
             document.querySelector("#playlists-holder").appendChild(newEle);
         }
     }
@@ -35,8 +35,10 @@ if (localStorage.login === "true") {
     xhr.send();
 }
 
-const getSongs = (url) =>{
+const getSongs = (url, img, name) =>{
+    localStorage.setItem("name", name)
     localStorage.setItem("song", url)
+    localStorage.setItem("img", img)
     window.location.replace("http://localhost:8000/playlist-view")
 }
 
