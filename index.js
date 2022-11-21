@@ -15,7 +15,7 @@ let access_token = null;
 const authorize = "https://accounts.spotify.com/authorize";
 const TOKEN = "https://accounts.spotify.com/api/token"
 CLIENT_ID = "8185081e41dd43d98ce0316fb6b109b1";
-CLIENT_SECRET = "00fd5784702d444cbe115553c19bb005";
+CLIENT_SECRET = "";
 REDIRECT_URI = "http://localhost:8000/callback";
 const stateKey = 'spotify_auth_state';
 
@@ -155,8 +155,27 @@ app.get("/playlist-tracks", (req, res) => {
     }
     console.log(prompt)
 
+    let key = "";
+    const configuration = new Configuration({
+      apiKey: key
+  });
+  const openai = new OpenAIApi(configuration);
 
-  res.send(data)
+  predict(prompt, openai)
+    .then(
+        response => {
+            const now = Date.now();
+            for (let i = 0; i < response.data.length; i++)
+            {
+                const b64 = response.data[i]['b64_json'];
+                const buffer = Buffer.from(b64, "base64");
+                const filename = `image_${now}_${i}.png`;
+                console.log("Writing image " + filename);
+                fs.writeFileSync(filename, buffer);
+            }
+            res.send("worked!")
+        }
+    )
   })
   .catch(error => {
     console.log(error)
@@ -168,7 +187,7 @@ app.get("/playlist-tracks", (req, res) => {
 app.get("/get-image", async (req, res) => {
 
     const configuration = new openai.Configuration({
-      apiKey : ""
+      apiKey : "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"
     })
 
   const openai = new openai.OpenAIApi(configuration);
@@ -190,7 +209,7 @@ app.get("/get-image", async (req, res) => {
   const imgResult = await fetch(url);
   const blob = await imgResult.blob();
   const buffer = Buffer.from( await blob.arrayBuffer() );
-  fs.writeFileSync( `./img/${Date.now()}.png`, buffer );
+  fs.writeFileSync( `./images/${Date.now()}.png`, buffer );
 
 })
 
@@ -201,6 +220,18 @@ let sendHtml = (url, res) => {
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
+}
+
+const predict = async function (prompt, openai) {
+  const response = await openai.createImage({
+      prompt: prompt,
+      n: 1,
+      size: "256x256",
+      // size: "1024x1024",
+      response_format: 'b64_json',
+  });
+
+  return response.data;
 }
 
 
